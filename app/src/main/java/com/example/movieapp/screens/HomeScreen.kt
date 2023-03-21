@@ -1,5 +1,6 @@
 package com.example.movieapp.screens
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -40,7 +41,7 @@ fun HomeScreen(navController: NavController){
                 style = MaterialTheme.typography.h6,
                 text= "Movie List"
             )
-            MyList()
+            MyList(navController = navController)
         }
     }
 }
@@ -89,19 +90,19 @@ fun AppBar() {
 }
 
 @Composable
-fun MyList(movies: List<Movie> = getMovies()){
+fun MyList(movies: List<Movie> = getMovies(), navController: NavController){
     LazyColumn{
         items(movies) {movie ->
-            MovieRow(
-                movie = movie
-            )
+            MovieRow(movie = movie) { movieId ->
+                navController.navigate(route = "detailscreen/$movieId")
+            }
         }
     }
 }
 
 
 @Composable
-fun MovieRow(movie: Movie) {
+fun MovieRow(movie: Movie, onItemClick:(String) -> Unit) {
     var rotation by remember {
         mutableStateOf(0f)
     }
@@ -111,6 +112,7 @@ fun MovieRow(movie: Movie) {
 
     Card(modifier = Modifier
         .fillMaxWidth()
+        .clickable { onItemClick(movie.id) }
         .padding(5.dp),
         shape = RoundedCornerShape(corner = CornerSize(15.dp)),
         elevation = 5.dp
