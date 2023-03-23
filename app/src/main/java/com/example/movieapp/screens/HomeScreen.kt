@@ -1,6 +1,5 @@
 package com.example.movieapp.screens
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,10 +9,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +24,7 @@ import coil.compose.AsyncImage
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
 
+
 @Composable
 fun HomeScreen(navController: NavController){
     Surface(
@@ -35,7 +32,7 @@ fun HomeScreen(navController: NavController){
         color = MaterialTheme.colors.background
     ) {
         Column {
-            AppBar()
+            SimpleAppBar(navController,"Movies",true)
             Greeting()
             Text(
                 style = MaterialTheme.typography.h6,
@@ -46,45 +43,69 @@ fun HomeScreen(navController: NavController){
     }
 }
 
-
 @Composable
-fun AppBar() {
+fun ShowArrowBack(navController: NavController){
+    Row() {
+        IconButton(onClick = { navController.navigate(route = "homescreen") }) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back"
+            )
+        }
+    }
+}
+@Composable
+fun ShowMoreVert(navController: NavController){
     var expanded by remember {
         mutableStateOf(false)
     }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.End
+    ) {
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "Menu"
+            )
+            DropdownMenu(expanded = expanded,
+                onDismissRequest = { expanded = !expanded },
+            ) {
+                DropdownMenuItem(onClick = { expanded = !expanded
+                    navController.navigate(route = "favoritescreen")}) {
+                    Icon(imageVector = Icons.Default.Favorite,
+                        contentDescription = "Favourites",
+                        Modifier.padding(0.dp,0.dp,5.dp,0.dp))
+                    Text(text = "Favourites")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SimpleAppBar(navController: NavController, text: String, homeOrNot: Boolean) {
     TopAppBar() {
-        Box(
+        if(!homeOrNot)
+        {
+            ShowArrowBack(navController = navController)
+        }
+
+        Row(
             modifier = Modifier
                 .padding(10.dp)
         ) {
             Text(
                 style = MaterialTheme.typography.h6,
-                text = "Movies"
+                text = text
             )
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            contentAlignment = Alignment.TopEnd
-        ) {
-            IconButton(onClick = { expanded = !expanded }) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = "Menu"
-                )
-                DropdownMenu(expanded = expanded,
-                    onDismissRequest = { expanded = !expanded },
-                ) {
-                    DropdownMenuItem(onClick = { expanded = !expanded }) {
-                        Icon(imageVector = Icons.Default.Favorite,
-                            contentDescription = "Favourites",
-                            Modifier.padding(0.dp,0.dp,5.dp,0.dp))
-                        Text(text = "Favourites")
-                    }
-                }
-            }
+        if(homeOrNot){
+           ShowMoreVert(navController = navController)
         }
     }
 }
@@ -93,8 +114,8 @@ fun AppBar() {
 fun MyList(movies: List<Movie> = getMovies(), navController: NavController){
     LazyColumn{
         items(movies) {movie ->
-            MovieRow(movie = movie) { movieId ->
-                navController.navigate(route = "detailscreen/$movieId")
+            MovieRow(movie = movie) {  movieId, movieTitle ->
+                navController.navigate(route = "detailscreen/${movieId}/${movieTitle}")
             }
         }
     }
@@ -102,7 +123,7 @@ fun MyList(movies: List<Movie> = getMovies(), navController: NavController){
 
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick:(String) -> Unit) {
+fun MovieRow(movie: Movie, onItemClick:(String,String) -> Unit) {
     var rotation by remember {
         mutableStateOf(0f)
     }
@@ -112,7 +133,7 @@ fun MovieRow(movie: Movie, onItemClick:(String) -> Unit) {
 
     Card(modifier = Modifier
         .fillMaxWidth()
-        .clickable { onItemClick(movie.id) }
+        .clickable { onItemClick(movie.id, movie.title) }
         .padding(5.dp),
         shape = RoundedCornerShape(corner = CornerSize(15.dp)),
         elevation = 5.dp
@@ -178,7 +199,7 @@ fun MovieRow(movie: Movie, onItemClick:(String) -> Unit) {
                     Divider(modifier = Modifier
                         .padding(2.dp,0.dp),
                         thickness = 1.dp,
-                        color = Color.Gray
+                        color = Color.LightGray
                     )
                     Text(modifier = Modifier
                         .padding(10.dp,0.dp),
