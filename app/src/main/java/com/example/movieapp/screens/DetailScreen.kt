@@ -6,8 +6,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,24 +45,6 @@ fun DetailScreen(navController: NavController, movieId: String?, movieTitle: Str
             color = Color.LightGray
         )
         MovieImages(getDetailedMovie(movieId).images)
-    }
-}
-
-@Composable
-fun DetailTopBar(navController: NavController,movieTitle: String?) {
-    TopAppBar() {
-        Row() {
-            IconButton(onClick = { navController.navigate(route = "homescreen") }) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }
-            Text(
-                text = "${movieTitle}",
-                style = MaterialTheme.typography.h6
-            )
-        }
     }
 }
 
