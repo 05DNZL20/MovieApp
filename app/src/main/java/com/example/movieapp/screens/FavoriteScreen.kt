@@ -12,11 +12,11 @@ fun FavoriteScreen(navController: NavController){
 
         val movie = getMovies()
 
-        MovieRow(movie = movie[0], onItemClick = { movieId, movieTitle ->
-            navController.navigate(route = "detailscreen/${movieId}/${movieTitle}")
+        MovieRow(movie = movie[0], onItemClick = { movieId ->
+            navController.navigate(route = Screen.Detail.passArgument(movieId))
         })
-        MovieRow(movie = movie[5], onItemClick = { movieId, movieTitle ->
-            navController.navigate(route = "detailscreen/${movieId}/${movieTitle}")
+        MovieRow(movie = movie[5], onItemClick = { movieId ->
+            navController.navigate(route = Screen.Detail.passArgument(movieId))
         })
     }
 }

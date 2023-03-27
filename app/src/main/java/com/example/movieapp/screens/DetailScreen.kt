@@ -31,16 +31,19 @@ fun getDetailedMovie(movieId: String?): Movie{
 }
 
 @Composable
-fun DetailScreen(navController: NavController, movieId: String?, movieTitle: String?) {
+fun DetailScreen(navController: NavController, movieId: String?) {
     Column {
-        movieTitle?.let { SimpleAppBar(navController = navController, text = it, homeOrNot = false) }
 
-        MovieRow(movie = getDetailedMovie(movieId), onItemClick = { movieId, movieTitle ->
-            navController.navigate(route = "detailscreen/${movieId}/${movieTitle}")
+        SimpleAppBar(navController = navController, text = getDetailedMovie(movieId).title,
+            homeOrNot = false)
+
+        MovieRow(movie = getDetailedMovie(movieId), onItemClick = { movieId ->
+            navController.navigate(route = Screen.Detail.passArgument(movieId))
         })
 
-        Divider(modifier = Modifier
-            .padding(0.dp,10.dp),
+        Divider(
+            modifier = Modifier
+                .padding(0.dp, 10.dp),
             thickness = 1.dp,
             color = Color.LightGray
         )

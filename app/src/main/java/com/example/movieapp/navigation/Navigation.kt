@@ -8,10 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movieapp.models.Movie
 import com.example.movieapp.models.getMovies
-import com.example.movieapp.screens.DetailScreen
-import com.example.movieapp.screens.FavoriteScreen
-import com.example.movieapp.screens.HomeScreen
-import com.example.movieapp.screens.Screen
+import com.example.movieapp.screens.*
 
 @Composable
 fun MyNavigation(){
@@ -21,12 +18,10 @@ fun MyNavigation(){
 
         composable(route = Screen.Home.route) { HomeScreen(navController = navController)}
         composable(route = Screen.Detail.route,
-            arguments = listOf(navArgument("movieId") { type = NavType.StringType },
-                navArgument("movieTitle") { type = NavType.StringType })
-        ) { backStackEntry ->
+            arguments = listOf(navArgument(movieId) { type = NavType.StringType })
+        ) {
             DetailScreen(navController = navController,
-                movieId = backStackEntry.arguments?.getString("movieId"),
-                movieTitle = backStackEntry.arguments?.getString("movieTitle"))
+                movieId = it.arguments?.getString(movieId).toString())
         }
         composable(route = Screen.Favorite.route) { FavoriteScreen(navController = navController)}
     }

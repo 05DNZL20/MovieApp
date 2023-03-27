@@ -46,7 +46,7 @@ fun HomeScreen(navController: NavController){
 @Composable
 fun ShowArrowBack(navController: NavController){
     Row() {
-        IconButton(onClick = { navController.navigate(route = "homescreen") }) {
+        IconButton(onClick = { navController.navigate(route = Screen.Home.route) }) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Back"
@@ -75,7 +75,7 @@ fun ShowMoreVert(navController: NavController){
                 onDismissRequest = { expanded = !expanded },
             ) {
                 DropdownMenuItem(onClick = { expanded = !expanded
-                    navController.navigate(route = "favoritescreen")}) {
+                    navController.navigate(route = Screen.Favorite.route)}) {
                     Icon(imageVector = Icons.Default.Favorite,
                         contentDescription = "Favourites",
                         Modifier.padding(0.dp,0.dp,5.dp,0.dp))
@@ -114,8 +114,8 @@ fun SimpleAppBar(navController: NavController, text: String, homeOrNot: Boolean)
 fun MyList(movies: List<Movie> = getMovies(), navController: NavController){
     LazyColumn{
         items(movies) {movie ->
-            MovieRow(movie = movie) {  movieId, movieTitle ->
-                navController.navigate(route = "detailscreen/${movieId}/${movieTitle}")
+            MovieRow(movie = movie) {  movieId ->
+                navController.navigate(route = Screen.Detail.passArgument(movieId))
             }
         }
     }
@@ -123,7 +123,7 @@ fun MyList(movies: List<Movie> = getMovies(), navController: NavController){
 
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick:(String,String) -> Unit) {
+fun MovieRow(movie: Movie, onItemClick:(String) -> Unit) {
     var rotation by remember {
         mutableStateOf(0f)
     }
@@ -133,7 +133,7 @@ fun MovieRow(movie: Movie, onItemClick:(String,String) -> Unit) {
 
     Card(modifier = Modifier
         .fillMaxWidth()
-        .clickable { onItemClick(movie.id, movie.title) }
+        .clickable { onItemClick(movie.id) }
         .padding(5.dp),
         shape = RoundedCornerShape(corner = CornerSize(15.dp)),
         elevation = 5.dp
