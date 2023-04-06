@@ -22,4 +22,16 @@ class MoviesViewModel : ViewModel() {
             _movie.isFavorite = !_movie.isFavorite
         }
     }
+
+    fun checkValidation(input: String, float: Boolean): Boolean {
+        if (!float) {
+            return input.isNotEmpty()
+        }else{
+            return input.isNotEmpty()&&input.toFloatOrNull() != null
+        }
+    }
+
+    fun addMovie(movie: Movie){
+        _movieList.add(movie)
+    }
 }

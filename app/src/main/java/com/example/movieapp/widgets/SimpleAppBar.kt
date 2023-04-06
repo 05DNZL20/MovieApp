@@ -66,10 +66,17 @@ fun ShowMoreVert(navController: NavController){
                 onDismissRequest = { expanded = !expanded },
             ) {
                 DropdownMenuItem(onClick = { expanded = !expanded
+                    navController.navigate(route = Screen.AddMovie.route)}) {
+                    Icon(imageVector = Icons.Default.Edit,
+                        contentDescription = "Add Movie",
+                        Modifier.padding(end = 5.dp))
+                    Text(text = "Add Movie")
+                }
+                DropdownMenuItem(onClick = { expanded = !expanded
                     navController.navigate(route = Screen.Favorite.route)}) {
                     Icon(imageVector = Icons.Default.Favorite,
                         contentDescription = "Favourites",
-                        Modifier.padding(0.dp,0.dp,5.dp,0.dp))
+                        Modifier.padding(end = 5.dp))
                     Text(text = "Favourites")
                 }
             }
