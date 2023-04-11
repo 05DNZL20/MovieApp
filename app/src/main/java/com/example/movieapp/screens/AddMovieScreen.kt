@@ -278,10 +278,21 @@ fun MainContent(navController: NavController, modifier: Modifier = Modifier, vie
             isEnabledSaveButton = isTitleValid && isYearValid && isGenreValid && isDirectorValid
                     && isActorValid && isRatingValid
 
+            id++
+
+            val genreList: ArrayList<Genre> = ArrayList()
+
+            for (i in genres.indices) {
+                if(genreItems[i].isSelected){
+                    genreList.add(genres[i])
+                }
+            }
+
             Button(
                 enabled = isEnabledSaveButton,
-                onClick = { viewModel.addMovie( Movie(id = "${id+1}",title = title, year = year,
-                    genre = genreItems.toString(),
+                onClick = {
+                    viewModel.addMovie( Movie(id = "${id}",title = title, year = year,
+                    genre = genreList.joinToString(),
                     director = director, actors = actors, plot = plot,
                     images = listOf("https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"),
                     rating = rating.toFloat(), initialChecked = false))
