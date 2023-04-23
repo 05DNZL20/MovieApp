@@ -3,29 +3,33 @@ package com.example.movieapp.models
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-data class Movie(
-    val id: String,
+@Entity
+class Movie(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val title: String,
     val year: String,
-    val genre: String,
+    val genre: List<Genre>,
+    //val genre: String,
     val director: String,
     val actors: String,
     val plot: String,
     val images: List<String>,
     val rating: Float = 0f,
-    val initialChecked: Boolean = false
+    var isFavorite: Boolean = false
 ) {
-    var isFavorite by mutableStateOf(initialChecked)
+  //  var isFavorite by mutableStateOf(initialIsFavorite)
 }
 
 fun getMovies(): List<Movie> {
     return listOf(
         Movie(
-            id = "tt0499549",
             title = "Avatar",
             year = "2009",
-            genre = "Action, Adventure, Fantasy",
+            genre = listOf(Genre.ACTION, Genre.ADVENTURE, Genre.FANTASY),
             director = "James Cameron",
             actors = "Sam Worthington, Zoe Saldana, Sigourney Weaver, Stephen Lang",
             plot = "A paraplegic marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
@@ -40,10 +44,9 @@ fun getMovies(): List<Movie> {
         ),
 
         Movie(
-            id = "tt0416449",
             title = "300",
             year = "2006",
-            genre = "Action, Drama, Fantasy",
+            genre = listOf(Genre.ACTION,Genre.DRAMA,Genre.FANTASY),
             director = "Zack Snyder",
             actors = "Gerard Butler, Lena Headey, Dominic West, David Wenham",
             plot = "King Leonidas of Sparta and a force of 300 men fight the Persians at Thermopylae in 480 B.C.",
@@ -56,10 +59,9 @@ fun getMovies(): List<Movie> {
         ),
 
         Movie(
-            id = "tt0848228",
             title = "The Avengers",
             year = "2012",
-            genre = "Action, Sci-Fi, Thriller",
+            genre = listOf(Genre.ACTION, Genre.SCIFI, Genre.THRILLER),
             director = "Joss Whedon",
             actors = "Robert Downey Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth",
             plot = "Earth's mightiest heroes must come together and learn to fight as a team if they are to stop the mischievous Loki and his alien army from enslaving humanity.",
@@ -74,10 +76,9 @@ fun getMovies(): List<Movie> {
         ),
 
         Movie(
-            id = "tt0993846",
             title = "The Wolf of Wall Street",
             year = "2013",
-            genre = "Biography, Comedy, Crime",
+            genre = listOf(Genre.BIOGRAPHY, Genre.COMEDY, Genre.CRIME),
             director = "Martin Scorsese",
             actors = "Leonardo DiCaprio, Jonah Hill, Margot Robbie, Matthew McConaughey",
             plot = "Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.",
@@ -92,10 +93,9 @@ fun getMovies(): List<Movie> {
         ),
 
         Movie(
-            id = "tt0816692",
             title = "Interstellar",
             year = "2014",
-            genre = "Adventure, Drama, Sci-Fi",
+            genre = listOf(Genre.ADVENTURE, Genre.DRAMA, Genre.SCIFI),
             director = "Christopher Nolan",
             actors = "Ellen Burstyn, Matthew McConaughey, Mackenzie Foy, John Lithgow",
             plot = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
@@ -109,10 +109,9 @@ fun getMovies(): List<Movie> {
             rating = 8.6f
         ),
         Movie(
-            id = "tt0944947",
             title = "Game of Thrones",
             year = "2011 - 2018",
-            genre = "Adventure, Drama, Fantasy",
+            genre = listOf(Genre.ADVENTURE, Genre.DRAMA, Genre.FANTASY),
             director = "N/A",
             actors = "Peter Dinklage, Lena Headey, Emilia Clarke, Kit Harington",
             plot = "While a civil war brews between several noble families in Westeros, the children of the former rulers of the land attempt to rise up to power. Meanwhile a forgotten race, bent on destruction, plans to return after thousands of years in the North.",
@@ -128,10 +127,9 @@ fun getMovies(): List<Movie> {
 
 
         Movie(
-            id = "tt2306299",
             title = "Vikings",
             year = "2013–2020",
-            genre = "Action, Drama, History",
+            genre = listOf(Genre.ACTION, Genre.DRAMA, Genre.HISTORY),
             director = "N/A",
             actors = "Travis Fimmel, Clive Standen, Gustaf Skarsgård, Katheryn Winnick",
             plot = "The world of the Vikings is brought to life through the journey of Ragnar Lothbrok, the first Viking to emerge from Norse legend and onto the pages of history - a man on the edge of myth.",
@@ -146,10 +144,9 @@ fun getMovies(): List<Movie> {
         ),
 
         Movie(
-            id = "tt0903747",
             title = "Breaking Bad",
             year = "2008–2013",
-            genre = "Crime, Drama, Thriller",
+            genre = listOf(Genre.DRAMA,Genre.CRIME,Genre.THRILLER),
             director = "N/A",
             actors = "Bryan Cranston, Anna Gunn, Aaron Paul, Dean Norris",
             plot = "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's financial future.",
@@ -164,10 +161,9 @@ fun getMovies(): List<Movie> {
         ),
 
         Movie(
-            id = "tt2707408",
             title = "Narcos",
             year = "2015-",
-            genre = "Biography, Crime, Drama",
+            genre = listOf(Genre.BIOGRAPHY,Genre.CRIME, Genre.DRAMA),
             director = "N/A",
             actors = "Wagner Moura, Boyd Holbrook, Pedro Pascal, Joanna Christie",
             plot = "A chronicled look at the criminal exploits of Colombian drug lord Pablo Escobar.",

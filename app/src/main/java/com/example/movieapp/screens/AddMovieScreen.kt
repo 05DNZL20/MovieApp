@@ -12,20 +12,24 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieapp.R
-import com.example.movieapp.models.Genre
-import com.example.movieapp.models.ListItemSelectable
-import com.example.movieapp.models.Movie
-import com.example.movieapp.models.MoviesViewModel
+import com.example.movieapp.models.*
+import com.example.movieapp.utils.InjectorUtils
+import com.example.movieapp.viewmodel.AddMovieViewModel
 import com.example.movieapp.widgets.SimpleAppBar
+import kotlinx.coroutines.launch
 
 @Composable
-fun AddMovieScreen(navController: NavController, viewModel: MoviesViewModel){
+fun AddMovieScreen(navController: NavController){
+    val viewModel: AddMovieViewModel = viewModel(factory = InjectorUtils.provideAddMovieViewModelFactory(
+        LocalContext.current))
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(
@@ -41,7 +45,9 @@ fun AddMovieScreen(navController: NavController, viewModel: MoviesViewModel){
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainContent(navController: NavController, modifier: Modifier = Modifier, viewModel: MoviesViewModel) {
+fun MainContent(navController: NavController, modifier: Modifier = Modifier, viewModel: AddMovieViewModel) {
+    val coroutineScope = rememberCoroutineScope()
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -278,25 +284,21 @@ fun MainContent(navController: NavController, modifier: Modifier = Modifier, vie
             isEnabledSaveButton = isTitleValid && isYearValid && isGenreValid && isDirectorValid
                     && isActorValid && isRatingValid
 
-            id++
-
-            val genreList: ArrayList<Genre> = ArrayList()
-
-            for (i in genres.indices) {
-                if(genreItems[i].isSelected){
-                    genreList.add(genres[i])
-                }
-            }
 
             Button(
                 enabled = isEnabledSaveButton,
                 onClick = {
-                    viewModel.addMovie( Movie(id = "${id}",title = title, year = year,
-                    genre = genreList.joinToString(),
-                    director = director, actors = actors, plot = plot,
-                    images = listOf("https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"),
-                    rating = rating.toFloat(), initialChecked = false))
-
+                    coroutineScope.launch {
+                        viewModel.addMovie(
+                            Movie(
+                                title = title, year = year,
+                                genre = genreItems.filter { it.isSelected }.map { Genre.valueOf(it.title)},
+                                director = director, actors = actors, plot = plot,
+                                images = listOf("https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"),
+                                rating = rating.toFloat(), isFavorite = false
+                            )
+                        )
+                    }
                     navController.navigate(route = Screen.Home.route)})
             {
                 Text(text = stringResource(R.string.add))

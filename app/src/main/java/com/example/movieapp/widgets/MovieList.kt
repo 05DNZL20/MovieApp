@@ -20,14 +20,13 @@ import coil.compose.AsyncImage
 import com.example.movieapp.models.Movie
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick:(String) -> Unit, onFavClick:(Movie) -> Unit) {
+fun MovieRow(movie: Movie, onItemClick:(Int) -> Unit, onFavClick:(Movie) -> Unit) {
     var rotation by rememberSaveable {
         mutableStateOf(0f)
     }
     var expanded by rememberSaveable {
         mutableStateOf(false)
     }
-
     Card(modifier = Modifier
         .fillMaxWidth()
         .clickable { onItemClick(movie.id) }

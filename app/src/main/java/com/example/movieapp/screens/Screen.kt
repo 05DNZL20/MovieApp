@@ -5,7 +5,7 @@ const val movieId = "movieID"
 sealed class Screen(val route: String) {
     object Home: Screen(route = "homescreen")
     object Detail: Screen(route = "detailscreen/{$movieId}"){
-        fun passArgument(movieID: String):String{
+        fun passArgument(movieID: Int):String{
             return "detailscreen/$movieID"
         }
     }
