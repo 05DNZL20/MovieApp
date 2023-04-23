@@ -8,15 +8,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.movieapp.data.MovieDatabase
+import com.example.movieapp.repositories.MovieRepository
 import com.example.movieapp.viewmodel.FavoriteViewModel
-import com.example.movieapp.utils.InjectorUtils
+import com.example.movieapp.viewmodel.FavoriteViewModelFactory
 import com.example.movieapp.widgets.*
 import kotlinx.coroutines.launch
 
 @Composable
 fun FavoriteScreen(navController: NavController) {
-    val viewModel: FavoriteViewModel = viewModel(factory = InjectorUtils.provideFavoriteViewModelFactory(
-        LocalContext.current))
+    val db = MovieDatabase.getDatabase(LocalContext.current)
+    val repository = MovieRepository(movieDao = db.movieDao())
+    val factory = FavoriteViewModelFactory(repository = repository)
+    val viewModel: FavoriteViewModel = viewModel(factory = factory)
 
     Column() {
         SimpleAppBar(navController = navController, text = "Favorites", homeOrNot = false)
@@ -27,19 +31,15 @@ fun FavoriteScreen(navController: NavController) {
 @Composable
 fun FavoriteList(navController: NavController, viewModel: FavoriteViewModel){
     val coroutineScope = rememberCoroutineScope()
-
-    var favIconToggler by rememberSaveable {
-        mutableStateOf(false)
-    }
+    val favList by viewModel.favMovieList.collectAsState()
 
     LazyColumn() {
-        items(viewModel.favMovieList.value) { movie ->
+        items(items = favList) { movie ->
             MovieRow(movie = movie, onItemClick =  { movieId ->
                 navController.navigate(route = Screen.Detail.passArgument(movieId))
             }, onFavClick = {
                 coroutineScope.launch {
                     viewModel.favoriteToggler(movie)
-                    favIconToggler = !favIconToggler
                 }
             })
         }

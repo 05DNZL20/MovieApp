@@ -20,16 +20,23 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieapp.R
+import com.example.movieapp.data.MovieDatabase
 import com.example.movieapp.models.*
-import com.example.movieapp.utils.InjectorUtils
+import com.example.movieapp.repositories.MovieRepository
 import com.example.movieapp.viewmodel.AddMovieViewModel
+import com.example.movieapp.viewmodel.AddMovieViewModelFactory
+import com.example.movieapp.viewmodel.FavoriteViewModel
+import com.example.movieapp.viewmodel.FavoriteViewModelFactory
 import com.example.movieapp.widgets.SimpleAppBar
 import kotlinx.coroutines.launch
 
 @Composable
 fun AddMovieScreen(navController: NavController){
-    val viewModel: AddMovieViewModel = viewModel(factory = InjectorUtils.provideAddMovieViewModelFactory(
-        LocalContext.current))
+    val db = MovieDatabase.getDatabase(LocalContext.current)
+    val repository = MovieRepository(movieDao = db.movieDao())
+    val factory = AddMovieViewModelFactory(repository = repository)
+    val viewModel: AddMovieViewModel = viewModel(factory = factory)
+
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(

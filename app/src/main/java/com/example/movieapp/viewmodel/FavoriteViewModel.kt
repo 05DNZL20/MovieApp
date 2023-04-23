@@ -13,7 +13,7 @@ class FavoriteViewModel(private val repository: MovieRepository): ViewModel() {
 
     init {
         viewModelScope.launch {
-            repository.readAllFav().collect{ favList ->
+            repository.readAllFav().collect { favList ->
                 _favMovieList.value = favList
             }
         }
